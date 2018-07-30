@@ -1,0 +1,129 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>WebSocket</title>
+</head>
+<body>
+<div>
+    // 服务端响应
+    <button type="button" onclick="clearAll()">清空</button>
+</div>
+<div>
+    状态:<span class="state">未连接</span><br/>
+    人数:<span class="number">0</span>
+</div>
+<textarea id="box" cols="50" rows="20" disabled>
+
+</textarea>
+<p>// 聊天框</p>
+发送框: <input class="message" type="text" value="你好"/>
+<button type="button" onclick="sendMessage()">发送</button>
+
+
+<script>
+
+    let $textarea = document.querySelector('#box'),
+        $number = document.querySelector('.number'),
+        $state = document.querySelector('.state'),
+        $message = document.querySelector('.message');
+
+    /**
+     * CONNECTING：值为0，表示正在连接。
+     * OPEN：值为1，表示连接成功，可以通信了。
+     * CLOSING：值为2，表示连接正在关闭。
+     * CLOSED：值为3，表示连接已经关闭，或者打开连接失败。
+     */
+    let ws = {
+        socket: null,
+        reconnectInterval: null,
+        connect() {
+            this.socket = new WebSocket("ws://127.0.0.1:9090/ws");
+            this.socket.onmessage = this.onMessage;
+            this.socket.onclose = this.onClose;
+            this.socket.onerror = this.onError;
+            this.socket.onopen = this.onOpen;
+            if (!!this.reconnectInterval
+                && this.socket.readyState === WebSocket.OPEN) {
+                clearInterval(this.reconnectInterval);
+            }
+        },
+        reconnect() {
+            this.reconnectInterval = setInterval(() => {
+
+                /**
+                 * 已经关闭 或 正在关闭
+                 */
+                if (this.socket.readyState === WebSocket.CLOSED
+                    || this.socket.readyState === WebSocket.CLOSING) {
+                    this.connect();
+                }
+            }, 100);
+        },
+
+        // 当有消息过来的时候触发
+        onMessage(event) {
+            console.log("接收消息", event.data);
+            if (event.data.startsWith("UP:")) {
+                $number.innerHTML = event.data.substr(3);
+            } else {
+                changeTextarea($textarea.value += `${event.data} \n`);
+            }
+        },
+
+        // 连接关闭的时候触发
+        onClose(event) {
+            $state.innerHTML = `[断开连接] \n`;
+            console.log("断开连接");
+            ws.reconnect();
+        },
+
+        // 连接打开的时候触发
+        onOpen(event) {
+            $state.innerHTML = `[建立连接] \n`;
+            console.log("建立连接");
+        },
+
+        // 发生错误的时候触发
+        onError(event) {
+            $state.value = `[发生错误] \n`;
+            console.log("发生错误");
+            ws.reconnect();
+        },
+
+        // 发送消息
+        send(msg) {
+            this.socket.send(msg);
+        }
+    };
+
+    ws.connect();
+
+    function clearAll() {
+        changeTextarea('');
+    }
+
+    function sendMessage() {
+        let msg = $message.value;
+        if (!msg) {
+            return;
+        }
+        if (ws.socket.readyState === WebSocket.CLOSED
+            || ws.socket.readyState === WebSocket.CLOSING
+            || ws.socket.readyState === WebSocket.CONNECTING) {
+            console.log(ws.socket.readyState);
+            alert("连接已断开");
+            return;
+        }
+
+        changeTextarea($textarea.value += `已进行广播: ${msg}\n`);
+        ws.socket.send(msg);
+    }
+
+    function changeTextarea(val) {
+        $textarea.value = val;
+        $textarea.scrollTop = $textarea.scrollHeight;
+    }
+
+</script>
+</body>
+</html>
