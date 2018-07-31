@@ -1,4 +1,4 @@
-package in.hocg.test.netty.message.json;
+package in.hocg.test.message.json;
 
 /**
  * @author hocgin

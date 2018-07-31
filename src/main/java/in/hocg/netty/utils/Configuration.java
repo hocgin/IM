@@ -1,4 +1,4 @@
-package in.hocg.test.netty.utils;
+package in.hocg.netty.utils;
 
 import java.io.InputStream;
 import java.util.Optional;

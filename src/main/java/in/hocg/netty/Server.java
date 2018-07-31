@@ -1,4 +1,4 @@
-package in.hocg.test.netty;
+package in.hocg.netty;
 
 /**
  * @author hocgin

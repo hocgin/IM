@@ -1,6 +1,6 @@
-package in.hocg.test.netty.message.json.head;
+package in.hocg.test.message.json.head;
 
-import in.hocg.test.netty.message.Head;
+import in.hocg.test.message.Head;
 import lombok.Data;
 
 /**

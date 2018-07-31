@@ -1,6 +1,6 @@
-package in.hocg.test.netty.message.json.body;
+package in.hocg.test.message.json.body;
 
-import in.hocg.test.netty.message.Body;
+import in.hocg.test.message.Body;
 
 /**
  * @author hocgin

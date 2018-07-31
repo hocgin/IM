@@ -1,4 +1,4 @@
-package in.hocg.test.netty.message;
+package in.hocg.test.message;
 
 import java.io.Serializable;
 

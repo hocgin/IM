@@ -1,6 +1,6 @@
-package in.hocg.test.netty;
+package in.hocg.netty;
 
-import in.hocg.test.netty.handler.TextWebSocketFrameHandler;
+import in.hocg.netty.handler.TextWebSocketFrameHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
