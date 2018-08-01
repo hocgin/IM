@@ -16,8 +16,14 @@
 
 </textarea>
 <p>// 聊天框</p>
-发送框: <input class="message" type="text" value="你好"/>
-<button type="button" onclick="sendMessage()">发送</button>
+<div>
+    接收者 ID: <input class="toUser" type="text" maxlength="2" style="width: 6em" placeholder="ID(可选)"/>
+</div>
+<div>
+    发送框: <input class="message" type="text" value="你好"/>
+    <button type="button" onclick="sendMessage()">发送</button>
+    <button type="button" onclick="sendToUserMessage()">私聊</button>
+</div>
 
 
 <script>
@@ -25,6 +31,7 @@
     let $textarea = document.querySelector('#box'),
         $number = document.querySelector('.number'),
         $state = document.querySelector('.state'),
+        $toUser = document.querySelector('.toUser'),
         $message = document.querySelector('.message');
 
     /**
@@ -102,8 +109,7 @@
         changeTextarea('');
     }
 
-    function sendMessage() {
-        let msg = $message.value;
+    function send(msg) {
         if (!msg) {
             return;
         }
@@ -114,9 +120,24 @@
             alert("连接已断开");
             return;
         }
-
-        changeTextarea($textarea.value += `已进行广播: ${msg}\n`);
+        console.log(`发送内容 ${msg}`);
         ws.socket.send(msg);
+    }
+
+    function sendMessage() {
+        /**
+         * 模块号,命令号,消息内容
+         * 1,0,消息内容
+         */
+        send(`1,0,${$message.value}`);
+    }
+
+    function sendToUserMessage() {
+        /**
+         * 模块号,命令号,消息内容
+         * 1,1,ID:消息内容
+         */
+        send(`1,1,${$toUser.value || 1}:${$message.value}`);
     }
 
     function changeTextarea(val) {

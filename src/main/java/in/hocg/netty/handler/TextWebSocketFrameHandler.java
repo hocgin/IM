@@ -100,7 +100,8 @@ public class TextWebSocketFrameHandler extends SimpleChannelInboundHandler<TextW
      */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
-        InvokerManager.getInvoker(1, 0).invoke(ctx, msg);
-        
+    
+        String[] split = msg.text().split(",");
+        InvokerManager.getInvoker(Integer.valueOf(split[0]), Integer.valueOf(split[1])).invoke(ctx, msg);
     }
 }
