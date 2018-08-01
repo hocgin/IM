@@ -38,7 +38,7 @@ public final class NettyServer extends ChannelInitializer<Channel> implements Se
             bootstrap.group(boss, work)
                     .channel(NioServerSocketChannel.class)
                     .childHandler(this)
-                    .option(ChannelOption.SO_KEEPALIVE, true)
+                    .childOption(ChannelOption.SO_KEEPALIVE, true)
                     .bind(port)
                     .channel()
                     .closeFuture()

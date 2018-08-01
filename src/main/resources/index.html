@@ -55,11 +55,10 @@
             }
         },
         reconnect() {
+            $state.innerHTML = `正在重连中 \n`;
             this.reconnectInterval = setInterval(() => {
 
-                /**
-                 * 已经关闭 或 正在关闭
-                 */
+                // 已经关闭 或 正在关闭
                 if (this.socket.readyState === WebSocket.CLOSED
                     || this.socket.readyState === WebSocket.CLOSING) {
                     this.connect();
